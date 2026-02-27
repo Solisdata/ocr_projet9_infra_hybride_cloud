@@ -5,14 +5,20 @@ import os
 os.environ["HADOOP_HOME"] = "C:\\hadoop"
 os.environ["PATH"] = "C:\\hadoop\\bin;" + os.environ["PATH"]
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import from_json, col, when, count
-from pyspark.sql.types import StructType, StructField, StringType
+from pyspark.sql.functions import from_json, col, when, count, to_timestamp
+from pyspark.sql.types import StructType, StructField, StringType, TimestampType
+from pyspark.sql.functions import window
 
 print("[1/5] Démarrage de la session Spark...")
+
 spark = SparkSession.builder \
     .appName("ClientTickets") \
+    .master("local[*]") \
+    .config("spark.driver.host", "127.0.0.1") \
+    .config("spark.sql.shuffle.partitions", "2") \
     .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.4") \
-    .getOrCreate()
+    .getOrCreate()       
+
 spark.sparkContext.setLogLevel("ERROR")
 print("[1/5] Session Spark démarrée avec succès")
 
@@ -43,6 +49,9 @@ print("[4/5] Transformation des données...")
 df_str = df_raw.selectExpr("CAST(value AS STRING) as json_str")
 df_tickets = df_str.select(from_json(col("json_str"), schema).alias("data")).select("data.*")
 df_tickets = df_tickets.withColumn(
+    "date_creation_ts",
+    to_timestamp("date_creation", "yyyy-MM-dd HH:mm:ss"))
+df_tickets = df_tickets.withColumn(
     "equipe_support",
     when(col("type_demande") == "support technique", "Equipe Tech")
     .when(col("type_demande") == "facturation", "Equipe Facturation")
@@ -52,11 +61,36 @@ df_count = df_tickets.groupBy("type_demande").agg(count("*").alias("nb_tickets")
 print("[4/5] Transformations définies")
 
 print("[5/5] Lancement du stream... (en attente de messages Redpanda)")
-query = df_count.writeStream \
-    .outputMode("complete") \
-    .format("console") \
-    .option("truncate", False) \
+#configuration traitement en parquet
+query = df_tickets \
+    .withWatermark("date_creation_ts", "1 minute") \
+    .groupBy(
+        window(col("date_creation_ts"), "10 minutes"),
+        col("type_demande")
+    ) \
+    .agg(count("*").alias("nb_tickets")) \
+    .writeStream \
+    .outputMode("append") \
+    .format("parquet") \
+    .option("path", "./output_tickets") \
+    .option("checkpointLocation", "./checkpoints") \
+    .trigger(processingTime='10 seconds') \
     .start()
+  #Checkpoints : Spark va mémoriser l’état du stream dans ./checkpoints. Si le job crash → au redémarrage il reprend à la dernière position Kafka.
+  #format console avant : affichage dans terminal 
+#   query = df_count.writeStream \
+#     .outputMode("complete") \
+#     .format("consolde") \
+#     .option("path", "./output_tickets") \
+#     .option("checkpointLocation", "./checkpoints") \
+#     .trigger(processingTime='10 seconds') \
+#     .start()
 
 print(" Stream actif ! En écoute sur le topic:", TOPIC)
-query.awaitTermination()
+try:
+    query.awaitTermination()
+except KeyboardInterrupt:
+    print("Stream interrompu par l'utilisateur")
+except Exception as e:
+    print("Erreur inattendue :", e)
+

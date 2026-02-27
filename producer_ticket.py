@@ -2,22 +2,16 @@ from kafka import KafkaProducer
 import json
 from datetime import datetime
 import random
+import time
 
 # Adresse de du broker local
 BROKER = '127.0.0.1:19092'
 TOPIC = 'client_tickets'
 
 # Creation du producer
-producer = KafkaProducer(
-    bootstrap_servers=BROKER)
+producer = KafkaProducer(bootstrap_servers=BROKER)
 
-
-# Creation d'un consumer '
-producer = KafkaProducer(
-    bootstrap_servers=BROKER)
-
-
-# générer tickets leatoire
+# générer tickets aléatoire
 types_demande = ['support technique', 'facturation', 'info générale', 'autre']
 priorites = ['basse', 'moyenne', 'haute']
 
@@ -30,21 +24,21 @@ def generer_ticket(ticket_id, client_id):
             'Mot de passe oublié',
             'Problème de facturation',
             'Question sur les horaires',
-            'Changement d’adresse email'
+            'Changement adresse email'
         ]),
         'type_demande': random.choice(types_demande),
         'priorite': random.choice(priorites)
     }
 
-# Exemple : envoyer 50 tickets
-for i in range(1, 51):
-    ticket = generer_ticket(i, 100+i)
-        # Transformer en JSON puis en bytes
+# Envoi en flux continu (Ctrl+C pour arrêter)
+print("Envoi continu de tickets... (Ctrl+C pour arrêter)")
+ticket_id = 1
+while True:
+    client_id = random.randint(100, 1999)
+    ticket = generer_ticket(ticket_id, client_id)
     ticket_bytes = json.dumps(ticket).encode('utf-8')
     producer.send(TOPIC, ticket_bytes)
-    print(f"Ticket envoyé : {ticket}")
-
-# S’assurer que tout est envoyé
-producer.flush() 
-producer.close()
-print("Tickets envoyés !")
+    print(f"✅ Ticket {ticket_id} envoyé : {ticket}")
+    ticket_id += 1
+    time.sleep(5)
+    #1 ticket toutes les 5 secondes

@@ -1,0 +1,5 @@
+type_demande,equipe_support,total_tickets,basse_count,moyenne_count,haute_count,urgente_count,priorite_moyenne,clients_uniques,premier_ticket,dernier_ticket,basse_pct,moyenne_pct,haute_pct,urgente_pct
+facturation,Equipe Facturation,173,53,63,57,0,2.023121387283237,161,2026-02-27T11:15:06.000+01:00,2026-02-27T12:15:14.000+01:00,30.64,36.42,32.95,0.00
+autre,Equipe Generale,170,37,64,69,0,2.1882352941176473,160,2026-02-27T11:15:16.000+01:00,2026-02-27T12:14:44.000+01:00,21.76,37.65,40.59,0.00
+info générale,Equipe Generale,176,66,58,52,0,1.9204545454545454,170,2026-02-27T11:15:26.000+01:00,2026-02-27T12:15:09.000+01:00,37.50,32.95,29.55,0.00
+support technique,Equipe Tech,196,65,62,69,0,2.020408163265306,189,2026-02-27T11:16:11.000+01:00,2026-02-27T12:14:59.000+01:00,33.16,31.63,35.20,0.00
