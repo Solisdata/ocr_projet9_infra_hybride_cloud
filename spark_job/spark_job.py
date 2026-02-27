@@ -5,6 +5,10 @@
 import os
 from datetime import datetime, timedelta
 import pandas as pd
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
+from config import BROKER, TOPIC, SPARK_APP_NAME, SPARK_MASTER, SPARK_SHUFFLE_PARTITIONS,WINDOW_HOURS,EQUIPE_MAPPING   
 
 # --- Configuration environnement Windows / Spark ---
 os.environ["HADOOP_HOME"] = "C:\\hadoop"
@@ -21,8 +25,6 @@ from pyspark.sql.functions import (
 )
 from pyspark.sql.types import StructType, StringType
 
-BROKER = "127.0.0.1:19092"
-TOPIC = "client_tickets"
 
 def main():
 
@@ -35,12 +37,12 @@ def main():
 
     # --- Création de la session Spark ---
     spark = SparkSession.builder \
-        .appName("KafkaTicketBatchStats_LastHour") \
-        .master("local[*]") \
+        .appName(SPARK_APP_NAME) \
+        .master(SPARK_MASTER) \
         .config("spark.driver.host", "127.0.0.1") \
         .config("spark.driver.bindAddress", "127.0.0.1") \
-        .config("spark.sql.shuffle.partitions", "2") \
-        .config("spark.hadoop.mapreduce.fileoutputcommitter.algorithm.version", "1") \
+        .config("spark.sql.shuffle.partitions", SPARK_SHUFFLE_PARTITIONS) \
+        .config("spark.hadoop.mapreduce.fileoutputcommitter.algorithm.version", WINDOW_HOURS) \
         .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.4") \
         .getOrCreate()
 
