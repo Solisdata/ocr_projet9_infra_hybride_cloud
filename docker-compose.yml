@@ -62,3 +62,23 @@ services:
       - 8080:8080
     depends_on:
       - redpanda-0
+
+  producer:
+    build:
+      context: .
+      dockerfile: producer/Dockerfile
+    container_name: producer
+    networks:
+      - redpanda_network
+    depends_on:
+      - redpanda-0
+
+  batch_spark:
+    build:
+      context: .
+      dockerfile: spark_job/Dockerfile
+    container_name: batch_spark
+    networks:
+      - redpanda_network
+    depends_on:
+      - redpanda-0
