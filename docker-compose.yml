@@ -1,4 +1,4 @@
-name: redpanda-quickstart-one-broker
+name: projet9
 networks:
   redpanda_network:
     driver: bridge
