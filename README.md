@@ -15,16 +15,14 @@ Le projet comporte deux parties :
 ```text
 Solisdata/
 ├── producer/
-│   ├── producer_ticket.py       # Script Python pour produire les tickets vers Kafka
+│   ├── producer_ticket.py       # Script Python pour produire les tickets
 │   ├── Dockerfile               # Containerisation du producer
-│   └── requirements.txt         # Dépendances du producer
 ├── spark_job/
 │   ├── spark_job_redpanda_batch.py # Job PySpark pour transformation et agrégation
 │   ├── Dockerfile                  # Containerisation du job PySpark
-│   └── requirements.txt            # Dépendances du job PySpark
 ├── data_raw/                      # Zone Bronze : tickets bruts
 ├── output_stats/                  # Zone Silver : fichiers statistiques
-├── presentation/                  # Documentation et visualisations
+├── presentation/                  # Documentation et visualisation de la réalisation du projet
 ├── config.py                      # Paramètres du pipeline (broker, topic, priorités, etc.)
 ├── .gitignore
 ├── docker-compose.yml             # Orchestration Redpanda et jobs
