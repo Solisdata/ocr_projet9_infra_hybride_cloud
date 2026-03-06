@@ -53,7 +53,7 @@ flowchart TD
 
     subgraph Processing
         B[Redpanda<br/>Topic: client_tickets]
-        C[spark_job.py<br/>Batch — dernière heure<br/>Transformation JSON → colonnes, équipe, priorité]
+        C[spark_job.py<br/>Batch — dernière heure<br/>Transformation]
     end
 
     subgraph Storage
