@@ -25,26 +25,42 @@ Les enjeux identifiés sont les suivants :
 
 ---
 
-## Partie 2 : POC Gestion des tickets clients en temps réel
-Le POC simule un broker Redpanda local pour valider le fonctionnement du pipeline.
+## Partie 2 : POC (Proof Of Concept) sur un système de gestion de tickets clients. 
 
-**Objectif :** L'objectif  est de mettre en place un pipeline ETL capable de :  
-1. Ingerer des tickets en temps réel via **Redpanda**  
-2. Traiter et analyser avec **PySpark**  
-3. Génération d'un rapport et insights.
-
-Les tickets contiennent :  
-- ID du ticket  
-- ID du client  
-- Date et heure de création  
-- Demande  
-- Type de demande  
-- Priorité  
+**Objectif :** L'objectif  est faire un POC (Proof Of Concept) sur un système de gestion de tickets clients et de mettre en place un pipeline ETL capable de :  
+1. Générer une simulation de flux tickets clients en temps réel contenant les informations sur les demande, le client, etc.
+2. Ingerer des tickets en temps réel via **Redpanda**  
+3. Traiter et analyser les tickets avec **PySpark**  
+4. Génération des insights.
 
 ---
+### Description du pipeline
+- **Producer Python** : génère et envoie les tickets vers le topic `client_tickets`  
+- **Redpanda Broker** : stocke les tickets 
+- **PySpark Batch Job** :  
+  - Lit les tickets de la dernière heure  
+  - Transforme → colonnes et ajoute équipe support + priorité  
+  - Agrège les statistiques par type de demande et équipe support  
+- **Stockage** :  
+  - **Bronze** : tickets bruts (`./data_raw/...`)  
+  - **Silver** : statistiques agrégées (`./output_stats/...`)  
+- **Orchestration** : Docker Compose pour Redpanda, console et jobs PySpark/producer  
 
 ## Architecture et pipeline  
 
+### Description du pipeline
+- **Producer Python** : génère et envoie les tickets vers le topic `client_tickets`  
+- **Redpanda Broker** : stocke les tickets 
+- **PySpark Batch Job** :  
+  - Lit les tickets de la dernière heure  
+  - Transforme → colonnes et ajoute équipe support + priorité  
+  - Agrège les statistiques par type de demande et équipe support  
+- **Stockage** :  
+  - **Bronze** : tickets bruts (`./data_raw/...`)  
+  - **Silver** : statistiques agrégées (`./output_stats/...`)  
+- **Orchestration** : Docker Compose pour Redpanda, console et jobs PySpark/producer
+
+  
 ```mermaid
 flowchart TD
     subgraph Producer
@@ -67,17 +83,6 @@ flowchart TD
     C -->|agrégation| F
 ```
 
-### Description du pipeline
-- **Producer Python** : génère et envoie les tickets vers le topic `client_tickets`  
-- **Redpanda Broker** : stocke les tickets 
-- **PySpark Batch Job** :  
-  - Lit les tickets de la dernière heure  
-  - Transforme → colonnes et ajoute équipe support + priorité  
-  - Agrège les statistiques par type de demande et équipe support  
-- **Stockage** :  
-  - **Bronze** : tickets bruts (`./data_raw/...`)  
-  - **Silver** : statistiques agrégées (`./output_stats/...`)  
-- **Orchestration** : Docker Compose pour Redpanda, console et jobs PySpark/producer  
 
 ### ETL – Transformations clés
 - Nettoyage et parsing des tickets JSON  
@@ -89,13 +94,7 @@ flowchart TD
   - Clients uniques  
   - Date du premier et dernier ticket  
 
-### Tests unitaires et d’intégration
-- Vérification des JSON reçus  
-- Attribution correcte des tickets aux équipes  
-- Lecture du topic Kafka et création des fichiers RAW / stats  
-- Performance et fiabilité du job PySpark  
-
-### Contenu du projet
+## Contenu du projet
 ```text
 Solisdata/
 ├── producer/
@@ -116,13 +115,13 @@ Solisdata/
 └── requirements.txt               # Dépendances globales
 ```
 
-### Justification des choix technologiques
+## Justification des choix technologiques
 - **Redpanda** : Redpanda reçoit des flux de données continus (comme tes tickets clients) et les stocke temporairement dans des “topics”
 - **PySpark** : traitement parallèle et agrégation massive de données - Le moteur Spark démarre un driver, Le driver distribue le travail aux executors (processus qui font réellement le calcul), les executors lisent les nouvelles données au fil de l’eau, appliquent les transformations et écrivent les résultats.Spark fait la boucle automatiquement : il surveille la source, crée des micro-batchs, exécute le job, répète.   
 - **Docker / Docker Compose** : containerisation et orchestration pour automatiser le pipeline ETL  
 - **Parquet** : formats standards pour stockage et analyse  
 
-### Outils utilisés
+## Outils utilisés
 - Python  
 - PySpark  
 - Redpanda 
