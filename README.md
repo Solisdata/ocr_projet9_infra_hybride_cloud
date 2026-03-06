@@ -55,19 +55,7 @@ Les enjeux identifiés sont les suivants :
 4. Génération des insights.
 
 ---
-### Description du pipeline
-- **Producer Python** : génère et envoie les tickets vers le topic `client_tickets`  
-- **Redpanda Broker** : stocke les tickets 
-- **PySpark Batch Job** :  
-  - Lit les tickets de la dernière heure  
-  - Transforme → colonnes et ajoute équipe support + priorité  
-  - Agrège les statistiques par type de demande et équipe support  
-- **Stockage** :  
-  - **Bronze** : tickets bruts (`./data_raw/...`)  
-  - **Silver** : statistiques agrégées (`./output_stats/...`)  
-- **Orchestration** : Docker Compose pour Redpanda, console et jobs PySpark/producer  
-
-### Architecture et pipeline  
+### Pipeline 
 
 #### Description du pipeline
 - **Producer Python** : génère et envoie les tickets vers le topic `client_tickets`  
@@ -81,7 +69,7 @@ Les enjeux identifiés sont les suivants :
   - **Silver** : statistiques agrégées (`./output_stats/...`)  
 - **Orchestration** : Docker Compose pour Redpanda, console et jobs PySpark/producer
 
-  
+#### Diagramme
 ```mermaid
 flowchart TD
     subgraph Producer
