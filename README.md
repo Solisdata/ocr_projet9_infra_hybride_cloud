@@ -71,18 +71,25 @@ Les enjeux identifiés sont les suivants :
 #### Diagramme
 ```mermaid
 flowchart TD
-    subgraph Producer
-        A[producer.py<br/>Ticket toutes les 5s]
-    end
+    subgraph Docker_Engine [Plateforme Docker]
+        
+        subgraph Container_Producer [Conteneur: Producer]
+            A[producer.py<br/>Ticket toutes les 5s]
+        end
 
-    subgraph Processing
-        B[Redpanda<br/>Topic: client_tickets]
-        C[spark_job.py<br/>Batch — dernière heure<br/>Transformation]
-    end
+        subgraph Container_Redpanda [Conteneur: Redpanda]
+            B[Redpanda Broker<br/>Topic: client_tickets]
+        end
 
-    subgraph Storage
-        E[Bronze — raw.parquet]
-        F[Silver — stats.parquet / .csv]
+        subgraph Container_Spark [Conteneur: Batch Spark]
+            C[spark_job.py<br/>Transformation PySpark]
+        end
+        
+        subgraph Volumes_Docker [Docker Volumes / Local Mounts]
+            E[(Bronze — raw.parquet)]
+            F[(Silver — stats.parquet)]
+        end
+
     end
 
     A -->|produce| B
