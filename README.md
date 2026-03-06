@@ -97,6 +97,8 @@ flowchart TD
     C --> E
     C -->|agrégation| F
 ```
+#### Video de présentation : https://www.loom.com/share/d8db85264b2447618ee30f501eb2ae7a
+
 
 ### Justification des choix technologiques
 - **Redpanda** : Redpanda reçoit des flux de données continus (comme tes tickets clients) et les stocke temporairement dans des “topics”
