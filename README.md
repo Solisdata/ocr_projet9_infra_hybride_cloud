@@ -32,7 +32,7 @@ Solisdata/
 
 ---
 
-## Partie 1 
+## Partie 1 : audit et définition d'une architecture hybride on-premise ↔ cloud
 **Objectif :** L'objectif de la partie 1 est de préparer la modernisation la gestion des données en définissant une architecture hybride on-premise ↔ cloud adapter au besoin de l'entreprise. 
 Les enjeux identifiés sont les suivants : 
 - intégrer un moteur de streaming (Redpanda) pour les flux temps réel,  
@@ -45,7 +45,6 @@ Les enjeux identifiés sont les suivants :
 ![Schéma de l'architecture](presentation/partie-1-schema-infrastructure-hybride.png)
 
 ---
-/n
 ## Partie 2 : POC (Proof Of Concept) sur un système de gestion de tickets clients. 
 
 **Objectif :** L'objectif  est faire un POC (Proof Of Concept) sur un système de gestion de tickets clients et de mettre en place un pipeline ETL capable de :  
