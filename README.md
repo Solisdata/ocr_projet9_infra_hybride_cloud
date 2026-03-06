@@ -11,6 +11,28 @@ Le projet comporte deux parties :
 **Partie 1 :** Modéliser une infrastructure hybride dans le cloud  
 **Partie 2 :** POC : Gérer des tickets clients avec Redpanda et PySpark
 
+## Contenu du projet
+```text
+Solisdata/
+├── producer/
+│   ├── producer_ticket.py       # Script Python pour produire les tickets vers Kafka
+│   ├── Dockerfile               # Containerisation du producer
+│   └── requirements.txt         # Dépendances du producer
+├── spark_job/
+│   ├── spark_job_redpanda_batch.py # Job PySpark pour transformation et agrégation
+│   ├── Dockerfile                  # Containerisation du job PySpark
+│   └── requirements.txt            # Dépendances du job PySpark
+├── data_raw/                      # Zone Bronze : tickets bruts
+├── output_stats/                  # Zone Silver : fichiers statistiques
+├── presentation/                  # Documentation et visualisations
+├── config.py                      # Paramètres du pipeline (broker, topic, priorités, etc.)
+├── .gitignore
+├── docker-compose.yml             # Orchestration Redpanda et jobs
+├── README.md
+└── requirements.txt               # Dépendances globales
+```
+
+
 
 ## Partie 1 
 **Objectif :** L'objectif de la partie 1 est de préparer la modernisation la gestion des données en définissant une architecture hybride on-premise ↔ cloud adapter au besoin de l'entreprise. 
@@ -47,9 +69,9 @@ Les enjeux identifiés sont les suivants :
   - **Silver** : statistiques agrégées (`./output_stats/...`)  
 - **Orchestration** : Docker Compose pour Redpanda, console et jobs PySpark/producer  
 
-## Architecture et pipeline  
+### Architecture et pipeline  
 
-### Description du pipeline
+#### Description du pipeline
 - **Producer Python** : génère et envoie les tickets vers le topic `client_tickets`  
 - **Redpanda Broker** : stocke les tickets 
 - **PySpark Batch Job** :  
@@ -84,45 +106,13 @@ flowchart TD
     C -->|agrégation| F
 ```
 
-
-### ETL – Transformations clés
-- Nettoyage et parsing des tickets JSON  
-- Ajout de colonnes dérivées : année, mois, jour, heure, équipe support, priorité numérique  
-- Calculs statistiques :  
-  - Total de tickets  
-  - Nombre et pourcentage par priorité  
-  - Priorité moyenne  
-  - Clients uniques  
-  - Date du premier et dernier ticket  
-
-## Contenu du projet
-```text
-Solisdata/
-├── producer/
-│   ├── producer_ticket.py       # Script Python pour produire les tickets vers Kafka
-│   ├── Dockerfile               # Containerisation du producer
-│   └── requirements.txt         # Dépendances du producer
-├── spark_job/
-│   ├── spark_job_redpanda_batch.py # Job PySpark pour transformation et agrégation
-│   ├── Dockerfile                  # Containerisation du job PySpark
-│   └── requirements.txt            # Dépendances du job PySpark
-├── data_raw/                      # Zone Bronze : tickets bruts
-├── output_stats/                  # Zone Silver : fichiers statistiques
-├── presentation/                  # Documentation et visualisations
-├── config.py                      # Paramètres du pipeline (broker, topic, priorités, etc.)
-├── .gitignore
-├── docker-compose.yml             # Orchestration Redpanda et jobs
-├── README.md
-└── requirements.txt               # Dépendances globales
-```
-
-## Justification des choix technologiques
+### Justification des choix technologiques
 - **Redpanda** : Redpanda reçoit des flux de données continus (comme tes tickets clients) et les stocke temporairement dans des “topics”
 - **PySpark** : traitement parallèle et agrégation massive de données - Le moteur Spark démarre un driver, Le driver distribue le travail aux executors (processus qui font réellement le calcul), les executors lisent les nouvelles données au fil de l’eau, appliquent les transformations et écrivent les résultats.Spark fait la boucle automatiquement : il surveille la source, crée des micro-batchs, exécute le job, répète.   
 - **Docker / Docker Compose** : containerisation et orchestration pour automatiser le pipeline ETL  
 - **Parquet** : formats standards pour stockage et analyse  
 
-## Outils utilisés
+### Outils utilisés
 - Python  
 - PySpark  
 - Redpanda 
