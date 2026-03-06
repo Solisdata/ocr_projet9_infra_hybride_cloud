@@ -21,7 +21,8 @@ Les enjeux identifiés sont les suivants :
 
 **Livrables :**  
 - Rapport d'audit avec sélection de composants cloud pour une architecture hybride  
-- Schéma illustrant le flux de données entre on-premise et cloud  
+- Schéma illustrant le flux de données entre on-premise et cloud
+![Schéma de l'architecture](presentation/partie-1-schema-infrastructure-hybride.png)
 
 ---
 
