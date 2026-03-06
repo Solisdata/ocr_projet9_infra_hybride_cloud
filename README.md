@@ -1,7 +1,7 @@
 # OCR - Projet 9  
 **Modélisez une infrastructure dans le cloud**  
 *Février 2026*  
-
+---
 ## Contexte du projet
 InduTech Data, spécialisée en analyse de données industrielles, a intégré des solutions IoT (capteurs, objets connectés…). Cela génère un volume croissant de données que le datacenter actuel ne peut plus absorber (augmentation mensuelle de 50 Go de données en temps réel, principalement des flux continus nécessitant un traitement rapide et fiable).  
 
@@ -30,7 +30,7 @@ Solisdata/
 └── requirements.txt               # Dépendances globales
 ```
 
-
+---
 
 ## Partie 1 
 **Objectif :** L'objectif de la partie 1 est de préparer la modernisation la gestion des données en définissant une architecture hybride on-premise ↔ cloud adapter au besoin de l'entreprise. 
@@ -45,7 +45,7 @@ Les enjeux identifiés sont les suivants :
 ![Schéma de l'architecture](presentation/partie-1-schema-infrastructure-hybride.png)
 
 ---
-
+/n
 ## Partie 2 : POC (Proof Of Concept) sur un système de gestion de tickets clients. 
 
 **Objectif :** L'objectif  est faire un POC (Proof Of Concept) sur un système de gestion de tickets clients et de mettre en place un pipeline ETL capable de :  
@@ -54,7 +54,7 @@ Les enjeux identifiés sont les suivants :
 3. Traiter et analyser les tickets avec **PySpark**  
 4. Génération des insights.
 
----
+
 ### Pipeline 
 
 #### Description du pipeline
