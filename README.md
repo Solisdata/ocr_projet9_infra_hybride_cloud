@@ -1,6 +1,6 @@
 # OCR - Projet 9  
 **Modélisez une infrastructure dans le cloud**  
-*Février 2026*  
+*Mars 2026*  
 ---
 ## Contexte du projet
 InduTech Data, spécialisée en analyse de données industrielles, a intégré des solutions IoT (capteurs, objets connectés…). Cela génère un volume croissant de données que le datacenter actuel ne peut plus absorber (augmentation mensuelle de 50 Go de données en temps réel, principalement des flux continus nécessitant un traitement rapide et fiable).  
